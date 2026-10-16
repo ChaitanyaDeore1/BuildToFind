@@ -43,5 +43,28 @@ function reserveSeats(eventId, userId, seatIds) {
 
   store.reservations.set(reservation.id, reservation);
   return reservation;
+
+  function cancelReservation(reservationId, userId) {
+  const reservation = store.reservations.get(reservationId);
+
+  if (!reservation) {
+    throw new Error('RESERVATION_NOT_FOUND');
+  }
+  if (reservation.userId !== userId) {
+    throw new Error('NOT_RESERVATION_OWNER');
+  }
+  if (reservation.status !== 'ACTIVE') {
+    throw new Error('RESERVATION_NOT_ACTIVE');
+  }
+
+  // 5B go  for (const seatId of reservation.seatIds) {
+    const seat = store.seats.get(seatId);
+    if (seat) {
+      seat.status = 'AVAILABLE';
+    }
+  }
+
+  reservation.status = 'CANCELLED';
+  return reservation;
   
-module.exports = { reserveSeats };   4
+module.exports = { reserveSeats, cancelReservation };   
