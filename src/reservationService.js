@@ -28,5 +28,20 @@ function reserveSeats(eventId, userId, seatIds) {
       throw new Error(`Seat with ID ${seatId} is not available.`);
     }   
   }
+  
+  const reservation = {
+    id: generateId('res'),
+    eventId,
+    userId,
+    seatIds: [...seatIds],
+    status: 'ACTIVE',
+  };
 
-module.exports = { reserveSeats };  
+  for (const seatId of seatIds) {
+    store.seats.get(seatId).status = 'RESERVED';
+  }
+
+  store.reservations.set(reservation.id, reservation);
+  return reservation;
+  
+module.exports = { reserveSeats };   4
