@@ -14,6 +14,19 @@ function reserveSeats(eventId, userId, seatIds) {
     throw new Error('seatIds must be unique.');
   } 
 
-}
+}   
+  
+  for(const seatId of seatIds) {
+    const seat = store.seats.get(seatId);
+    if (!seat) {
+      throw new Error(`Seat with ID ${seatId} does not exist.`);
+    }   
+    if (seat.eventId !== eventId) {
+      throw new Error(`Seat with ID ${seatId} does not belong to event with ID ${eventId}.`);
+    }   
+    if (seat.status !== 'available') {
+      throw new Error(`Seat with ID ${seatId} is not available.`);
+    }   
+  }
 
 module.exports = { reserveSeats };  
