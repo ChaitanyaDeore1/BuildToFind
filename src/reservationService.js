@@ -66,5 +66,22 @@ function reserveSeats(eventId, userId, seatIds) {
 
   reservation.status = 'CANCELLED';
   return reservation;
+
+  function listAvailability(eventId) {
+  if (!store.events.has(eventId)) {
+    throw new Error('EVENT_NOT_FOUND');
+  }
+
+  const available = [];
+  for (const seat of store.seats.values()) {
+    if (seat.eventId === eventId && seat.status === 'AVAILABLE') {
+      available.push({ ...seat });
+    }
+  }
+   available.sort((a, b) =>
+    a.id.localeCompare(b.id, undefined, { numeric: true })
+  );
+  return available;
+}
   
-module.exports = { reserveSeats, cancelReservation };   
+module.exports = { reserveSeats, cancelReservation, listAvailability };   
